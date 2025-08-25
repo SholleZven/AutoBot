@@ -77,6 +77,33 @@ class TelegramController extends Controller
                     ]);
                 }
                 break;
+
+            case str_starts_with($text, '/mileage'):
+
+                // пример: /mileage 1 125000
+                $parts = explode(' ', $text, 3);
+                if (count($parts) < 3) {
+                    Telegram::sendMessage([
+                        'chat_id' => $chatId,
+                        'text' => "Формат: /mileage <id авто> <Пробег>"
+                    ]);
+                } else {
+                    $vehicle = Vehicle::find((int)$parts[1]);
+                    $oldMileage = $vehicle->initial_mileage;
+                    $currentMileage = (int)$parts[2];
+                    $vehicle->update(['initial_mileage' => $currentMileage]);
+
+                    // проверка задач
+                    foreach ($vehicle->tasks as $task) {
+                        if ($currentMileage >= $oldMileage + $task->interval_km) {
+                            Telegram::sendMessage([
+                                'chat_id' => $chatId,
+                                'text' => "В этом месяце вам необходимо заменить: {$task->description}"
+                            ]);
+                        }
+                    }
+                }
+                break;
         }
 
         return response()->json('ok', 200);
