@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/var/www
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: carbot
+      POSTGRES_USER: carbot
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
