@@ -31,4 +31,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'webhook_url' => env('TELEGRAM_WEBHOOK_URL'),
+        'polling_timeout' => env('TELEGRAM_POLLING_TIMEOUT', 30),
+        'polling_interval' => env('TELEGRAM_POLLING_INTERVAL', 1),
+    ],
+
 ];
